@@ -31,8 +31,6 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <sys/utsname.h>
-#include <systemd/sd-daemon.h>
-
 
 static int xpid;
 
@@ -77,7 +75,9 @@ int main(int argc, char **argv)
 			if (ret > 0) {
 				assert(ret == SIGUSR1);
 				/* got SIGUSR1, X server has started */
-				sd_notify(0, "READY=1");
+				/* kill the PID passed as first argument */
+				printf("X server ready, sending SIGUSR1 to %d", atoi(argv[1]));
+				kill(atoi(argv[1]), SIGUSR1);
 				break;
 			}
 			else if (errno == EINTR) {
@@ -148,7 +148,7 @@ int main(int argc, char **argv)
 
 	ptrs[0] = xserver;
 
-	for (i = 1; i < argc; i++)
+	for (i = 2; i < argc; i++)
 		ptrs[++count] = strdup(argv[i]);
 
 	for (i = 0; i <= count; i++) {
