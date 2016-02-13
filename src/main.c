@@ -66,9 +66,9 @@ int main(int argc, char **argv)
 
 		xpid = pid;
 
-		/* wait up to 10 seconds for X server to start */
+		/* wait up to 2 seconds for X server to start */
 		clock_gettime(CLOCK_REALTIME, &starttime);
-		timeout.tv_sec = 10;
+		timeout.tv_sec = 2;
 		timeout.tv_nsec = 0;
 		do {
 			int ret =  sigtimedwait(&mask, NULL, &timeout);
@@ -84,9 +84,9 @@ int main(int argc, char **argv)
 				struct timespec currenttime;
 				/* interrupted by other signal, update timeout and retry */
 				clock_gettime(CLOCK_REALTIME, &currenttime);
-				timeout.tv_sec = (starttime.tv_sec + 10) - currenttime.tv_sec;
+				timeout.tv_sec = (starttime.tv_sec + 2) - currenttime.tv_sec;
 				if (currenttime.tv_nsec > starttime.tv_nsec) {
-					timeout.tv_nsec = starttime.tv_nsec + 1000000000L - currenttime.tv_nsec;
+					timeout.tv_nsec = starttime.tv_nsec + 200000000L - currenttime.tv_nsec;
 					timeout.tv_sec--;
 				}
 				else {
@@ -100,7 +100,7 @@ int main(int argc, char **argv)
 				}
 			}
 			else if (errno == EAGAIN) {
-				fprintf(stderr, "X server startup timed out (10secs). This "
+				fprintf(stderr, "X server startup timed out (2secs). This "
 					"indicates an issue in the server configuration or drivers.\n");
 				exit(EXIT_FAILURE);
 			}
