@@ -76,8 +76,8 @@ int main(int argc, char **argv)
 				assert(ret == SIGUSR1);
 				/* got SIGUSR1, X server has started */
 				/* kill the PID passed as first argument */
-				printf("X server ready, sending SIGUSR1 to %d", atoi(argv[1]));
-				kill(atoi(argv[1]), SIGUSR1);
+				fprintf(stderr, "X server ready, sending SIGUSR2 to %d\n", atoi(argv[1]));
+				kill(atoi(argv[1]), SIGUSR2);
 				break;
 			}
 			else if (errno == EINTR) {
